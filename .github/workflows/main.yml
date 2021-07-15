@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: '0 0 1 * *'
 
 jobs:
   deploy:
@@ -16,3 +18,20 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           wranglerVersion: '1.13.0'
+      - name: update refresh token
+        id: refresh
+        run: |
+          ACCOUNT_ID=$(sed -n -r "s/^account_id\s*=\s*\"([^\"]+)\".*/\1/p" wrangler.toml)
+          NAMESPACES_ID=$(sed -n -r '/^kv_namespaces\s*=\s*\[/,/^\[.*\]\s*$/ s/.*\sid\s*=\s*"([^"]+).*/\1/p' wrangler.toml)
+          TOKEN_URI="https://login.microsoftonline.com/common/oauth2/v2.0/token"
+          CLIENT_ID=$(sed -n -r "s/^\s*client_id:\s*'([^']+)'.*/\1/p" src/config/default.js)
+          CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
+          REFRESH_TOKEN="$(curl --silent -X GET https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/storage/kv/namespaces/${NAMESPACES_ID}/values/refresh_token \
+                -H 'Authorization: Bearer ${{ secrets.CF_API_TOKEN }}' \
+                -H 'Content-Type:application/json')"
+          REFRESH_TOKEN=$(curl --silent -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&refresh_token=${REFRESH_TOKEN}&grant_type=refresh_token" "${TOKEN_URI}")
+          REFRESH_TOKEN=$(grep -Po '"refresh_token"\s*:\s*"\K[^"]+' <<< ${REFRESH_TOKEN})
+          curl -X PUT "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/storage/kv/namespaces/${NAMESPACES_ID}/values/refresh_token" \
+                -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
+                -H "Content-Type: text/plain" \
+                --data "${REFRESH_TOKEN}"
