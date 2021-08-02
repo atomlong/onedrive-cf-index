@@ -66,9 +66,9 @@ export async function renderFolderView(items, path, request) {
     )
 
   const intro = `<div class="intro markdown-body" style="text-align: left; margin-top: 2rem;">
-                    <h2>Yoo, I'm SiHuan 👋</h2>
-                    <p>This is SiHuan's AliyunDrive public directory listing. Feel free to download any files that you find useful. Reach me at: sihuan [at] sakuya [dot] love.</p>
-                    <p><a href="https://sakuya.love">Homepage</a> · <a href="https://blog.sakuya.love">Blog</a> · <a href="https://github.com/sihuan">GitHub</a></p>
+                    <h2>Yoo, I'm Atom 👋</h2>
+                    <p>This is Atom's AliyunDrive public directory listing. Feel free to download any files that you find useful. Reach me at: admin [at] eyun [dot] cf.</p>
+                    <p><a href="https://git.eyun.cf">Gitea</a> · <a href="https://blog.eyun.cf">Blog</a> · <a href="https://github.com/atomlong">GitHub</a></p>
                   </div>`
 
   // Check if current directory contains README.md, if true, then render spinner
