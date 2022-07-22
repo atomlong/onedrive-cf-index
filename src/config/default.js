@@ -18,7 +18,7 @@ const config = {
   },
 
   // refresh_token: REFRESH_TOKEN,
-  client_id: 'b5aeb577-586a-4e70-92b9-7ca07838a18c',
+  client_id: '11f5b4e5-9937-4503-8352-65da9e520614',
   client_secret: CLIENT_SECRET,
 
   /**
