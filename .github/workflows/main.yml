@@ -6,7 +6,9 @@ on:
       - main
   schedule:
     - cron: '0 0 1 * *'
-
+  watch:
+    types: [started]
+    
 jobs:
   deploy:
     runs-on: ubuntu-latest
